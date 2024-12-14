@@ -3,46 +3,60 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Password Analysis</title>
+    <title>Random Password Generator</title>
     <link rel="stylesheet" href="styles.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="script.js" defer></script>
 </head>
 <body>
     <header>
-        <h1>Password Analysis Dashboard</h1>
+        <h1>Random Password Generator</h1>
     </header>
+
     <main>
-        <section id="summary">
-            <h2>Summary</h2>
-            <p>Average Length: <span id="avgLength">N/A</span></p>
-            <p>Special Character Usage: <span id="specialCharUsage">N/A</span></p>
-        </section>
-        <section id="visualizations">
-            <h2>Visualizations</h2>
-            <canvas id="lengthDistributionChart"></canvas>
-            <canvas id="charTypeUsageChart"></canvas>
-            <canvas id="strengthCategoryChart"></canvas>
-        </section>
-        <section id="interactiveQueries">
-            <h2>Interactive Queries</h2>
-            <form id="queryForm">
-                <label for="strengthFilter">Filter by Strength:</label>
-                <select id="strengthFilter">
-                    <option value="all">All</option>
-                    <option value="strong">Strong</option>
-                    <option value="weak">Weak</option>
-                </select>
-                <button type="button" id="filterButton">Apply Filter</button>
-                <label for="searchInput">Evaluate Password:</label>
-                <input type="text" id="searchInput" placeholder="Enter a password">
-                <button type="button" id="searchButton">Evaluate</button>
+        <section id="settings">
+            <h2>Customize Your Password</h2>
+
+            <form id="password-form">
+                <label for="length">Password Length:</label>
+                <input type="number" id="length" name="length" min="6" max="128" value="12" required>
+
+                <label>
+                    <input type="checkbox" id="include-uppercase" checked>
+                    Include Uppercase Letters
+                </label>
+
+                <label>
+                    <input type="checkbox" id="include-numbers" checked>
+                    Include Numbers
+                </label>
+
+                <label>
+                    <input type="checkbox" id="include-symbols" checked>
+                    Include Symbols
+                </label>
+
+                <button type="submit">Generate Password</button>
             </form>
         </section>
-        <a href="index2.html"><h1 id="link">Password Generator Page</h1></a>
+
+        <section id="results">
+            <h2>Generated Password</h2>
+            <textarea id="generated-password" readonly></textarea>
+            <button id="copy-password">Copy to Clipboard</button>
+        </section>
+        <a href="index2.html"><h1 id="link">Password Analysis Page</h1></a>
+        <section id="analysis">
+            <h2>Password Analysis</h2>
+            <p><strong>Strength:</strong> <span id="password-strength">N/A</span></p>
+            <div id="visualizations">
+                <canvas id="composition-chart"></canvas>
+                <canvas id="strength-chart"></canvas>
+            </div>
+        </section>
     </main>
+
     <footer>
-        <p>Password Analysis Project</p>
+        <p>&copy; 2024 Random Password Generator. All rights reserved.</p>
     </footer>
-    <script src="script.js"></script>
 </body>
 </html>

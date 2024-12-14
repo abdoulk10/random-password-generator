@@ -1,4 +1,3 @@
-
 document.addEventListener("DOMContentLoaded", () => {
     const form = document.getElementById("password-form");
     const generatedPasswordField = document.getElementById("generated-password");
@@ -131,3 +130,121 @@ document.addEventListener("DOMContentLoaded", () => {
         alert("Password copied to clipboard!");
     });
 });
+
+
+let commonPasswords = [];
+
+fetch('common-passwords.txt')
+    .then(response => response.text())
+    .then(data => {
+        commonPasswords = data.split('\n');
+    });
+
+// Generate Dummy Passwords for Analysis
+const passwords = [
+    "P@ssw0rd", "123456", "Qwerty!", "StrongPass!2023", "Weak123",
+    "Unique$Pass", "Letmein@", "Monkey#99", "Admin$2021", "Complex@9876"
+];
+
+// Descriptive Method: Summarize Characteristics
+function summarizePasswords() {
+    const avgLength = (
+        passwords.reduce((sum, pwd) => sum + pwd.length, 0) / passwords.length
+    ).toFixed(2);
+    const specialCharUsage = (
+        passwords.filter(pwd => /[^a-zA-Z0-9]/.test(pwd)).length / passwords.length
+    ) * 100;
+
+    document.getElementById('avgLength').textContent = avgLength;
+    document.getElementById('specialCharUsage').textContent = `${specialCharUsage.toFixed(2)}%`;
+}
+
+// Nondescriptive Method: Predict Strength
+function predictStrength(password) {
+    return password.length >= 8 && /[^a-zA-Z0-9]/.test(password) ? "Strong" : "Weak";
+}
+
+// Decision Support Functionality: Provide Suggestions
+function suggestImprovements(password) {
+    let suggestions = [];
+    if (password.length < 8) {
+        suggestions.push("Increase the password length to at least 8 characters.");
+    }
+    if (!/[^a-zA-Z0-9]/.test(password)) {
+        suggestions.push("Include at least one special character.");
+    }
+    if (!/[a-z]/.test(password) || !/[A-Z]/.test(password)) {
+        suggestions.push("Use a mix of uppercase and lowercase letters.");
+    }
+    if (!/\d/.test(password)) {
+        suggestions.push("Add at least one numeric digit.");
+    }
+    if (commonPasswords.includes(password)) {
+        suggestions.push("Avoid using common passwords.");
+    }
+    return suggestions.length > 0 ? suggestions : ["Your password is strong!"];
+}
+
+// Visualizations
+function renderCharts() {
+    // Length Distribution
+    new Chart(document.getElementById('lengthDistributionChart'), {
+        type: 'bar',
+        data: {
+            labels: passwords,
+            datasets: [{ data: passwords.map(pwd => pwd.length), label: 'Length' }]
+        }
+    });
+
+    // Character Type Usage
+    const charTypeUsage = { Letters: 0, Numbers: 0, Symbols: 0 };
+    passwords.forEach(pwd => {
+        charTypeUsage.Letters += (pwd.match(/[a-zA-Z]/g) || []).length;
+        charTypeUsage.Numbers += (pwd.match(/\d/g) || []).length;
+        charTypeUsage.Symbols += (pwd.match(/[^a-zA-Z\d]/g) || []).length;
+    });
+    new Chart(document.getElementById('charTypeUsageChart'), {
+        type: 'pie',
+        data: {
+            labels: Object.keys(charTypeUsage),
+            datasets: [{ data: Object.values(charTypeUsage), backgroundColor: ['#007bff', '#ffc107', '#28a745'] }]
+        }
+    });
+
+    // Strength Categories
+    const strengthCategories = { Strong: 0, Weak: 0 };
+    passwords.forEach(pwd => {
+        strengthCategories[predictStrength(pwd)]++;
+    });
+    new Chart(document.getElementById('strengthCategoryChart'), {
+        type: 'doughnut',
+        data: {
+            labels: Object.keys(strengthCategories),
+            datasets: [{ data: Object.values(strengthCategories), backgroundColor: ['#28a745', '#dc3545'] }]
+        }
+    });
+}
+
+// Interactive Queries
+document.getElementById('filterButton').addEventListener('click', () => {
+    const strength = document.getElementById('strengthFilter').value;
+    const filteredPasswords = strength === 'all'
+        ? passwords
+        : passwords.filter(pwd => predictStrength(pwd) === strength);
+    alert(`Filtered Passwords: ${filteredPasswords.join(', ')}`);
+});
+
+document.getElementById('searchButton').addEventListener('click', () => {
+    const searchInput = document.getElementById('searchInput').value.trim();
+    const isDuplicate = commonPasswords.includes(searchInput);
+    if (isDuplicate) {
+        alert('Password is common. Avoid using it.');
+    } else {
+        const suggestions = suggestImprovements(searchInput);
+        alert(suggestions.join('\n'));
+    }
+});
+
+// Initialize
+summarizePasswords();
+renderCharts();
