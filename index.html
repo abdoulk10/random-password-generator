@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Password Analysis</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <header>
+        <h1>Password Analysis Dashboard</h1>
+    </header>
+    <main>
+        <section id="summary">
+            <h2>Summary</h2>
+            <p>Average Length: <span id="avgLength">N/A</span></p>
+            <p>Special Character Usage: <span id="specialCharUsage">N/A</span></p>
+        </section>
+        <section id="visualizations">
+            <h2>Visualizations</h2>
+            <canvas id="lengthDistributionChart"></canvas>
+            <canvas id="charTypeUsageChart"></canvas>
+            <canvas id="strengthCategoryChart"></canvas>
+        </section>
+        <section id="interactiveQueries">
+            <h2>Interactive Queries</h2>
+            <form id="queryForm">
+                <label for="strengthFilter">Filter by Strength:</label>
+                <select id="strengthFilter">
+                    <option value="all">All</option>
+                    <option value="strong">Strong</option>
+                    <option value="weak">Weak</option>
+                </select>
+                <button type="button" id="filterButton">Apply Filter</button>
+                <label for="searchInput">Evaluate Password:</label>
+                <input type="text" id="searchInput" placeholder="Enter a password">
+                <button type="button" id="searchButton">Evaluate</button>
+            </form>
+        </section>
+        <a href="index2.html"><h1 id="link">Password Generator Page</h1></a>
+    </main>
+    <footer>
+        <p>Password Analysis Project</p>
+    </footer>
+    <script src="script.js"></script>
+</body>
+</html>
